@@ -5,8 +5,8 @@ from Models import RR_Robot_Model
 alpha = 7
 k1 = 10.0
 k2 = 2.0
-k3 = 1.0
-k4 = 1.0
+k3 = 0*1.0
+k4 = 0*1.0
 
 Gama_M = 1.0
 Gama_V = 10.8

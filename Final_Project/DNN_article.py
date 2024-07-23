@@ -5,8 +5,8 @@ from Models import RR_Robot_Model
 alpha = 7
 k1 = 10.0
 k2 = 5.0
-k3 = 0*1.0
-k4 =0* 0.2
+k3 = 1.0
+k4 =0.2
 
 Gama_M = 20
 Gama_V = 50.8
@@ -21,7 +21,7 @@ A = 3 * np.pi / 8
 omega = np.pi / 2
 
 dt = 0.01
-T = 50
+T = 30
 num_steps = int(T / dt)
 tt = np.linspace(0, T, num_steps + 1)
 
@@ -229,8 +229,8 @@ for k in range(1, num_steps+1):
     qd_d = qd_d_[:, k]
     qdd_d = qdd_d_[:, k]
 
-    c_prev_F = c_F[:, k-1]
-    h_prev_F = h_F[:, k-1]
+    #c_prev_F = c_F[:, k-1]
+    #h_prev_F = h_F[:, k-1]
 
     # Compute derivatives and Jacobians
     x0_M = q
@@ -238,7 +238,7 @@ for k in range(1, num_steps+1):
     x0_G = q
     x0_F = qd
 
-    dc_F, dh_F, lstm_output_F, Theta_hat_prim_F = lstm_cell(x0_F, c_prev_F, h_prev_F, params_F)
+    #dc_F, dh_F, lstm_output_F, Theta_hat_prim_F = lstm_cell(x0_F, c_prev_F, h_prev_F, params_F)
 
     dnn_output_M, Phi_hat_prim_M = dnn(x0_M, params_M)
     dnn_output_V, Phi_hat_prim_V = dnn(x0_V, params_V)
@@ -269,7 +269,7 @@ for k in range(1, num_steps+1):
     Xi_M_prim = Phi_hat_prim_M
     Xi_V_prim =  Phi_hat_prim_V
     Xi_G_prim =Phi_hat_prim_G
-    Xi_F_prim = Theta_hat_prim_F
+    Xi_F_prim = Phi_hat_prim_F
 
 
     temp1=(np.kron((qdd_d - alpha * e_dot).T, I_n))
@@ -293,7 +293,7 @@ for k in range(1, num_steps+1):
 
     vv_F = np.hstack([vec(params_F['Wc']), vec(params_F['Wp']), vec(params_F['Wf']), vec(params_F['Wo']), vec(params_F['Wh'])])
     theta_F = dnn_param2vec(params_F)
-    Z_F = vv_F
+    Z_F = theta_F
 
     # Update parameters
     Z_M += dt * Z_M_dot
@@ -311,8 +311,8 @@ for k in range(1, num_steps+1):
     # Dynamics Update
     qdd=model.dynamic_model(tau, q, qd, t)
 
-    c_F[:, k] = dc_F * dt + c_prev_F
-    h_F[:, k] = dh_F * dt + h_prev_F
+    #c_F[:, k] = dc_F * dt + c_prev_F
+    #h_F[:, k] = dh_F * dt + h_prev_F
 
     qd += dt * qdd
     q += dt * qd
@@ -345,3 +345,4 @@ plt.grid(True)
 
 plt.show()
 
+Z_M_dot

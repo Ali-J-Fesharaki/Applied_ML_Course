@@ -10,8 +10,8 @@ k4 = 0.2
 
 Gama_M = 1.0
 Gama_V = 10.8
-Gama_G = 1.0
-Gama_F = 1.0
+Gama_G = 0*1.0
+Gama_F = 0*1.0
 
 n = 2
 I_n = np.eye(n)
@@ -30,7 +30,7 @@ qd_d_ = np.gradient(q_d_, dt, axis=1)
 qdd_d_ = np.gradient(qd_d_, dt, axis=1)
 
 # System initial states
-q = np.array([1.0, 1.0])
+q = np.array([0.4, -0.3])
 qd = np.array([0.0, 0.0])
 
 input_size_M = 2
@@ -194,7 +194,6 @@ def vec2param_dnn(theta, params):
         startpoint = endpoint
 
     return weights
-)
 
 def dnn_param2vec(params):
     w = params['weights']
